@@ -1,0 +1,62 @@
+unsigned long tempoOra = 0;
+unsigned long tempoInizio = 0;
+const unsigned long intervallo = 3000; // 3 secondi
+
+// PIN
+const int sens_rotazione = A0;
+const int sens_infrarossi = 9;   // PWM
+const int INT_SENS_ROT = 2;
+const int INT_SENS_INFRA = 3;
+const int buttonPin = 4;         // pin diverso da 2
+
+// Variabili
+int Stato_sens_rot;
+int Stato_sens_infra;
+int sensorValue = 0;
+int outputValue = 0;
+
+void setup() {
+  pinMode(INT_SENS_ROT, INPUT);
+  pinMode(INT_SENS_INFRA, INPUT);
+  pinMode(buttonPin, INPUT);
+  pinMode(sens_infrarossi, OUTPUT);
+
+  Serial.begin(9600);
+}
+
+void loop() {
+  tempoOra = millis();
+
+  // Esegui il codice ogni 3 secondi
+  if (tempoOra - tempoInizio >= intervallo) {
+    tempoInizio = tempoOra; // reset timer
+
+    Stato_sens_rot = digitalRead(INT_SENS_ROT);
+    Stato_sens_infra = digitalRead(INT_SENS_INFRA);
+
+    // --- Sensore di rotazione ---
+    if (Stato_sens_rot == HIGH) {
+      sensorValue = analogRead(sens_rotazione);
+      outputValue = map(sensorValue, 0, 1023, 0, 255);
+      analogWrite(sens_infrarossi, outputValue);
+
+      Serial.print("sensorRot = ");
+      Serial.println(sensorValue);
+      Serial.print("output PWM = ");
+      Serial.println(outputValue);
+    } else {
+      Serial.println("Nessun sensore di rotazione");
+    }
+
+    // --- Sensore infrarossi ---
+    if (Stato_sens_infra == HIGH) {
+      int buttonState = digitalRead(buttonPin);
+      Serial.print("sensorInfra = ");
+      Serial.println(buttonState);
+    } else {
+      Serial.println("Nessun sensore infrarossi");
+    }
+
+    Serial.println("----------------------");
+  }
+}

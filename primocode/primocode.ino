@@ -4,7 +4,7 @@ unsigned long tempoinizio = 0;
 const int sens_rotazione = A0;   // sensore analogico (potenziometro)
 const int sens_infrarossi = 9;   // PWM output
 
-#define INT_SENS_ROT 2           // sensore digitale rotazione
+#define INT_SENS_ROT 4          // sensore digitale rotazione
 #define INT_SENS_INFRA 3         // sensore infrarossi
 
 int Stato_sens_rot;
